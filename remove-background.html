@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remove Background — free image background remover, no upload</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #F1F3EE;
+    color: #1A1D18;
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 48px 20px 80px;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header { margin-bottom: 40px; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1F8A5F;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  p.sub {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #6B7268;
+    max-width: 480px;
+    line-height: 1.5;
+  }
+
+  nav.tools {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  nav.tools a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    color: #6B7268;
+    background: #FFFFFF;
+    border: 1px solid #DEE2D6;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  nav.tools a.active {
+    color: #1F8A5F;
+    border-color: #1F8A5F;
+    background: #F6FAF6;
+  }
+
+  .dropzone {
+    background: #FFFFFF;
+    border: 1.5px dashed #B8BDAE;
+    border-radius: 16px;
+    padding: 56px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .dropzone:hover, .dropzone.drag {
+    border-color: #1F8A5F;
+    background: #F6FAF6;
+  }
+
+  .dropzone-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 16px;
+    color: #1F8A5F;
+  }
+
+  .dropzone-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+
+  .dropzone-hint {
+    font-size: 13px;
+    color: #8B9084;
+  }
+
+  input[type="file"] { display: none; }
+
+  .status {
+    display: none;
+    margin-top: 28px;
+    background: #FFFFFF;
+    border: 1px solid #DEE2D6;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .status.active { display: block; }
+
+  .status-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: #EEF0E9;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #1F8A5F;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.2s ease;
+  }
+
+  .status-hint {
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #8B9084;
+  }
+
+  .result {
+    display: none;
+    margin-top: 24px;
+  }
+
+  .result.active { display: block; }
+
+  .result-card {
+    background: #FFFFFF;
+    border: 1px solid #DEE2D6;
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .preview-imgs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .preview-imgs img {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #DEE2D6;
+    display: block;
+    background:
+      linear-gradient(45deg, #eee 25%, transparent 25%),
+      linear-gradient(-45deg, #eee 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #eee 75%),
+      linear-gradient(-45deg, transparent 75%, #eee 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+  }
+
+  .preview-cap {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #8B9084;
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .download-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: #1A1D18;
+    color: #F1F3EE;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .download-btn:hover { background: #2C312A; }
+
+  .privacy-note {
+    margin-top: 32px;
+    font-size: 13px;
+    color: #8B9084;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-note {
+    display: none;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #B3261E;
+    background: #FBEAE8;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .error-note.active { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="tools">
+    <a href="index.html">Compress</a>
+    <a href="convert-image.html">Convert</a>
+    <a href="remove-background.html" class="active">Remove background</a>
+  </nav>
+
+  <header>
+    <div class="eyebrow">Free — no signup — runs in your browser</div>
+    <h1>Remove the background</h1>
+    <p class="sub">Get a clean, transparent cutout in one click. The first run downloads a small AI model to your browser — after that, nothing leaves your device.</p>
+  </header>
+
+  <div class="dropzone" id="dropzone">
+    <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 15V3m0 0L7 8m5-5l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="dropzone-label">Drop an image here, or click to choose</div>
+    <div class="dropzone-hint">JPG, PNG, or WebP · single file</div>
+    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+  </div>
+
+  <div class="status" id="status">
+    <div class="status-label" id="statusLabel">Loading AI model…</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="status-hint" id="statusHint">First time takes 10–30 seconds. It's cached after that.</div>
+  </div>
+
+  <div class="error-note" id="errorNote">Something went wrong processing that image. Try a different file, or a smaller one.</div>
+
+  <div class="result" id="result">
+    <div class="result-card">
+      <div class="preview-imgs">
+        <div>
+          <img id="origPreview" src="" alt="Original preview">
+          <div class="preview-cap">original</div>
+        </div>
+        <div>
+          <img id="cutoutPreview" src="" alt="Background removed preview">
+          <div class="preview-cap">background removed</div>
+        </div>
+      </div>
+      <button class="download-btn" id="downloadBtn">Download transparent PNG</button>
+    </div>
+  </div>
+
+  <div class="privacy-note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Your file never leaves this browser tab. Processing runs fully on-device.
+  </div>
+</div>
+
+<script type="module">
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const statusEl = document.getElementById('status');
+  const statusLabel = document.getElementById('statusLabel');
+  const progressFill = document.getElementById('progressFill');
+  const resultEl = document.getElementById('result');
+  const errorNote = document.getElementById('errorNote');
+  const origPreview = document.getElementById('origPreview');
+  const cutoutPreview = document.getElementById('cutoutPreview');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  let currentBlobUrl = null;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  async function handleFile(file) {
+    if (!file.type.startsWith('image/')) return;
+
+    errorNote.classList.remove('active');
+    resultEl.classList.remove('active');
+    origPreview.src = URL.createObjectURL(file);
+
+    statusEl.classList.add('active');
+    statusLabel.textContent = 'Loading AI model…';
+    progressFill.style.width = '5%';
+
+    try {
+      const { removeBackground } = await import('https://esm.sh/@imgly/background-removal@1.5.5');
+
+      const resultBlob = await removeBackground(file, {
+        progress: (key, current, total) => {
+          const pct = total ? Math.round((current / total) * 100) : 0;
+          progressFill.style.width = pct + '%';
+          statusLabel.textContent = key.includes('fetch') ? 'Downloading AI model…' : 'Removing background…';
+        }
+      });
+
+      if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+      currentBlobUrl = URL.createObjectURL(resultBlob);
+      cutoutPreview.src = currentBlobUrl;
+
+      statusEl.classList.remove('active');
+      resultEl.classList.add('active');
+    } catch (err) {
+      statusEl.classList.remove('active');
+      errorNote.classList.add('active');
+    }
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    if (!currentBlobUrl) return;
+    const a = document.createElement('a');
+    a.href = currentBlobUrl;
+    a.download = 'background-removed.png';
+    a.click();
+  });
+</script>
+</body>
+</html>

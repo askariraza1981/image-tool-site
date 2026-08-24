@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shrink — compress images free, no upload</title>
+<title>Convert Image — JPG, PNG, WebP converter, free, no upload</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
 
@@ -44,6 +44,30 @@
     color: #6B7268;
     max-width: 480px;
     line-height: 1.5;
+  }
+
+  nav.tools {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  nav.tools a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    color: #6B7268;
+    background: #FFFFFF;
+    border: 1px solid #DEE2D6;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  nav.tools a.active {
+    color: #1F8A5F;
+    border-color: #1F8A5F;
+    background: #F6FAF6;
   }
 
   .dropzone {
@@ -93,43 +117,38 @@
 
   .controls.active { display: block; }
 
-  .row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  .row:last-child { margin-bottom: 0; }
-
   .row-label {
-    font-size: 14px;
+    font-size: 13px;
     color: #4A4E44;
-    min-width: 90px;
-  }
-
-  input[type="range"] {
-    flex: 1;
-    accent-color: #1F8A5F;
-    height: 4px;
-  }
-
-  .quality-out {
+    margin-bottom: 10px;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    min-width: 40px;
-    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  select {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #DEE2D6;
+  .format-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .format-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 14px 8px;
+    border-radius: 10px;
+    border: 1.5px solid #DEE2D6;
     background: #fff;
     color: #1A1D18;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .format-btn.selected {
+    border-color: #1F8A5F;
+    background: #F6FAF6;
+    color: #1F8A5F;
   }
 
   .result {
@@ -139,63 +158,51 @@
 
   .result.active { display: block; }
 
-  .bars {
+  .result-card {
     background: #FFFFFF;
     border: 1px solid #DEE2D6;
     border-radius: 16px;
     padding: 24px;
   }
 
-  .bar-row {
-    margin-bottom: 16px;
-  }
-
-  .bar-row:last-child { margin-bottom: 0; }
-
-  .bar-label {
+  .file-info {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 13px;
-    margin-bottom: 6px;
     color: #4A4E44;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E4E7DD;
   }
 
-  .bar-track {
-    height: 10px;
-    background: #EEF0E9;
-    border-radius: 5px;
-    overflow: hidden;
+  .preview-imgs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
 
-  .bar-fill {
-    height: 100%;
-    border-radius: 5px;
-    transition: width 0.4s ease;
+  .preview-imgs img {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #DEE2D6;
+    display: block;
+    background:
+      linear-gradient(45deg, #eee 25%, transparent 25%),
+      linear-gradient(-45deg, #eee 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #eee 75%),
+      linear-gradient(-45deg, transparent 75%, #eee 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
   }
 
-  .bar-fill.original { background: #B8BDAE; }
-  .bar-fill.compressed { background: #1F8A5F; }
-
-  .savings {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #E4E7DD;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .savings-num {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 32px;
-    color: #1F8A5F;
-  }
-
-  .savings-label {
-    font-size: 14px;
-    color: #6B7268;
+  .preview-cap {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #8B9084;
+    text-align: center;
+    margin-top: 6px;
   }
 
   .download-btn {
@@ -215,28 +222,6 @@
 
   .download-btn:hover { background: #2C312A; }
 
-  .preview-imgs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 16px;
-  }
-
-  .preview-imgs img {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #DEE2D6;
-    display: block;
-  }
-
-  .preview-cap {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: #8B9084;
-    text-align: center;
-    margin-top: 6px;
-  }
-
   .privacy-note {
     margin-top: 32px;
     font-size: 13px;
@@ -245,44 +230,20 @@
     align-items: center;
     gap: 8px;
   }
-
-  nav.tools {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-
-  nav.tools a {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-decoration: none;
-    color: #6B7268;
-    background: #FFFFFF;
-    border: 1px solid #DEE2D6;
-    padding: 6px 12px;
-    border-radius: 20px;
-  }
-
-  nav.tools a.active {
-    color: #1F8A5F;
-    border-color: #1F8A5F;
-    background: #F6FAF6;
-  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <nav class="tools">
-    <a href="index.html" class="active">Compress</a>
-    <a href="convert-image.html">Convert</a>
+    <a href="index.html">Compress</a>
+    <a href="convert-image.html" class="active">Convert</a>
     <a href="remove-background.html">Remove background</a>
   </nav>
 
   <header>
     <div class="eyebrow">Free — no signup — runs in your browser</div>
-    <h1>Shrink your images</h1>
-    <p class="sub">Compress JPG, PNG, or WebP files without losing much quality. Nothing uploads to a server — the compression happens on your device.</p>
+    <h1>Convert your images</h1>
+    <p class="sub">Switch between JPG, PNG, and WebP in one click. Nothing uploads to a server — the conversion happens on your device.</p>
   </header>
 
   <div class="dropzone" id="dropzone">
@@ -296,46 +257,31 @@
   </div>
 
   <div class="controls" id="controls">
-    <div class="row">
-      <span class="row-label">Quality</span>
-      <input type="range" id="quality" min="10" max="95" value="70" step="5">
-      <span class="quality-out" id="qualityOut">70%</span>
-    </div>
-    <div class="row">
-      <span class="row-label">Output format</span>
-      <select id="format">
-        <option value="image/jpeg">JPG</option>
-        <option value="image/webp">WebP</option>
-        <option value="image/png">PNG</option>
-      </select>
+    <div class="row-label">Convert to</div>
+    <div class="format-options">
+      <button class="format-btn selected" data-format="image/jpeg" data-ext="jpg">JPG</button>
+      <button class="format-btn" data-format="image/png" data-ext="png">PNG</button>
+      <button class="format-btn" data-format="image/webp" data-ext="webp">WebP</button>
     </div>
   </div>
 
   <div class="result" id="result">
-    <div class="bars">
-      <div class="bar-row">
-        <div class="bar-label"><span>Original</span><span id="origSize">—</span></div>
-        <div class="bar-track"><div class="bar-fill original" id="origBar" style="width:100%"></div></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label"><span>Compressed</span><span id="compSize">—</span></div>
-        <div class="bar-track"><div class="bar-fill compressed" id="compBar" style="width:0%"></div></div>
-      </div>
-      <div class="savings">
-        <span class="savings-num" id="savingsPct">0%</span>
-        <span class="savings-label">smaller</span>
+    <div class="result-card">
+      <div class="file-info">
+        <span id="fileName">—</span>
+        <span id="fileSize">—</span>
       </div>
       <div class="preview-imgs">
         <div>
           <img id="origPreview" src="" alt="Original preview">
-          <div class="preview-cap">before</div>
+          <div class="preview-cap">original</div>
         </div>
         <div>
-          <img id="compPreview" src="" alt="Compressed preview">
-          <div class="preview-cap">after</div>
+          <img id="convPreview" src="" alt="Converted preview">
+          <div class="preview-cap" id="convLabel">converted</div>
         </div>
       </div>
-      <button class="download-btn" id="downloadBtn">Download compressed image</button>
+      <button class="download-btn" id="downloadBtn">Download converted image</button>
     </div>
   </div>
 
@@ -349,38 +295,41 @@
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('fileInput');
   const controls = document.getElementById('controls');
-  const qualitySlider = document.getElementById('quality');
-  const qualityOut = document.getElementById('qualityOut');
-  const formatSelect = document.getElementById('format');
   const resultEl = document.getElementById('result');
-  const origSizeEl = document.getElementById('origSize');
-  const compSizeEl = document.getElementById('compSize');
-  const origBar = document.getElementById('origBar');
-  const compBar = document.getElementById('compBar');
-  const savingsPct = document.getElementById('savingsPct');
   const origPreview = document.getElementById('origPreview');
-  const compPreview = document.getElementById('compPreview');
+  const convPreview = document.getElementById('convPreview');
+  const convLabel = document.getElementById('convLabel');
+  const fileNameEl = document.getElementById('fileName');
+  const fileSizeEl = document.getElementById('fileSize');
   const downloadBtn = document.getElementById('downloadBtn');
+  const formatBtns = document.querySelectorAll('.format-btn');
 
   let currentImage = null;
   let currentBlob = null;
-  let originalSize = 0;
+  let selectedFormat = 'image/jpeg';
+  let selectedExt = 'jpg';
+  let baseName = 'converted';
 
   dropzone.addEventListener('click', () => fileInput.click());
-
-  dropzone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropzone.classList.add('drag');
-  });
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
   dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropzone.classList.remove('drag');
     if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
   });
-
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  formatBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      formatBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedFormat = btn.dataset.format;
+      selectedExt = btn.dataset.ext;
+      if (currentImage) convert();
+    });
   });
 
   function formatBytes(bytes) {
@@ -391,7 +340,7 @@
 
   function handleFile(file) {
     if (!file.type.startsWith('image/')) return;
-    originalSize = file.size;
+    baseName = file.name.replace(/\.[^/.]+$/, '');
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
@@ -399,59 +348,42 @@
         currentImage = img;
         origPreview.src = e.target.result;
         controls.classList.add('active');
-        compress();
+        convert();
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   }
 
-  function compress() {
+  function convert() {
     if (!currentImage) return;
     const canvas = document.createElement('canvas');
     canvas.width = currentImage.width;
     canvas.height = currentImage.height;
     const ctx = canvas.getContext('2d');
+    if (selectedFormat === 'image/jpeg') {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
     ctx.drawImage(currentImage, 0, 0);
-
-    const quality = parseInt(qualitySlider.value) / 100;
-    const format = formatSelect.value;
 
     canvas.toBlob((blob) => {
       currentBlob = blob;
       const url = URL.createObjectURL(blob);
-      compPreview.src = url;
-
-      origSizeEl.textContent = formatBytes(originalSize);
-      compSizeEl.textContent = formatBytes(blob.size);
-
-      const maxSize = Math.max(originalSize, blob.size);
-      origBar.style.width = (originalSize / maxSize * 100) + '%';
-      compBar.style.width = (blob.size / maxSize * 100) + '%';
-
-      const reduction = Math.max(0, Math.round((1 - blob.size / originalSize) * 100));
-      savingsPct.textContent = reduction + '%';
-
+      convPreview.src = url;
+      convLabel.textContent = selectedExt;
+      fileNameEl.textContent = baseName + '.' + selectedExt;
+      fileSizeEl.textContent = formatBytes(blob.size);
       resultEl.classList.add('active');
-    }, format, format === 'image/png' ? undefined : quality);
+    }, selectedFormat, 0.92);
   }
-
-  qualitySlider.addEventListener('input', () => {
-    qualityOut.textContent = qualitySlider.value + '%';
-    if (currentImage) compress();
-  });
-
-  formatSelect.addEventListener('change', () => {
-    if (currentImage) compress();
-  });
 
   downloadBtn.addEventListener('click', () => {
     if (!currentBlob) return;
-    const ext = formatSelect.value.split('/')[1];
     const url = URL.createObjectURL(currentBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'compressed.' + ext;
+    a.download = baseName + '.' + selectedExt;
     a.click();
     URL.revokeObjectURL(url);
   });
