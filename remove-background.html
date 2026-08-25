@@ -13,13 +13,84 @@
     background: #F1F3EE;
     color: #1A1D18;
     font-family: 'Inter', -apple-system, sans-serif;
-    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1040px;
+    margin: 0 auto;
     padding: 48px 20px 80px;
   }
 
-  .wrap { max-width: 720px; margin: 0 auto; }
+  nav.tools {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
 
-  header { margin-bottom: 40px; }
+  nav.tools a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    color: #6B7268;
+    background: #FFFFFF;
+    border: 1px solid #DEE2D6;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  nav.tools a.active {
+    color: #1F8A5F;
+    border-color: #1F8A5F;
+    background: #F6FAF6;
+  }
+
+  .ad-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F6F7F2;
+    border: 1px dashed #D3D7CA;
+    border-radius: 10px;
+    color: #A6AB9C;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ad-slot-header {
+    width: 100%;
+    max-width: 728px;
+    height: 90px;
+    margin: 0 auto 32px;
+  }
+
+  .ad-slot-side {
+    width: 100%;
+    height: 280px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .main-col { min-width: 0; }
+
+  .side-col {
+    position: sticky;
+    top: 24px;
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .side-col { position: static; order: 2; }
+  }
+
+  header { margin-bottom: 32px; }
 
   .eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -44,30 +115,6 @@
     color: #6B7268;
     max-width: 480px;
     line-height: 1.5;
-  }
-
-  nav.tools {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-
-  nav.tools a {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-decoration: none;
-    color: #6B7268;
-    background: #FFFFFF;
-    border: 1px solid #DEE2D6;
-    padding: 6px 12px;
-    border-radius: 20px;
-  }
-
-  nav.tools a.active {
-    color: #1F8A5F;
-    border-color: #1F8A5F;
-    background: #F6FAF6;
   }
 
   .dropzone {
@@ -108,7 +155,7 @@
 
   .status {
     display: none;
-    margin-top: 28px;
+    margin-top: 24px;
     background: #FFFFFF;
     border: 1px solid #DEE2D6;
     border-radius: 16px;
@@ -207,7 +254,7 @@
   .download-btn:hover { background: #2C312A; }
 
   .privacy-note {
-    margin-top: 32px;
+    margin-top: 24px;
     font-size: 13px;
     color: #8B9084;
     display: flex;
@@ -226,59 +273,123 @@
   }
 
   .error-note.active { display: block; }
+
+  .game-zone {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #E4E7DD;
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .game-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: #1A1D18;
+  }
+
+  .game-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: #1F8A5F;
+  }
+
+  #gameCanvas {
+    width: 100%;
+    height: auto;
+    background: #F6F7F2;
+    border: 1px solid #DEE2D6;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .game-hint {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #8B9084;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
   <nav class="tools">
     <a href="index.html">Compress</a>
     <a href="convert-image.html">Convert</a>
     <a href="remove-background.html" class="active">Remove background</a>
   </nav>
 
-  <header>
-    <div class="eyebrow">Free — no signup — runs in your browser</div>
-    <h1>Remove the background</h1>
-    <p class="sub">Get a clean, transparent cutout in one click. The first run downloads a small AI model to your browser — after that, nothing leaves your device.</p>
-  </header>
+  <div class="ad-slot ad-slot-header">Ad space — 728×90</div>
 
-  <div class="dropzone" id="dropzone">
-    <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M12 15V3m0 0L7 8m5-5l5 5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <div class="dropzone-label">Drop an image here, or click to choose</div>
-    <div class="dropzone-hint">JPG, PNG, or WebP · single file</div>
-    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
-  </div>
+  <div class="layout">
+    <main class="main-col">
+      <header>
+        <div class="eyebrow">Free — no signup — runs in your browser</div>
+        <h1>Remove the background</h1>
+        <p class="sub">Get a clean, transparent cutout in one click. The first run downloads a small AI model to your browser — after that, nothing leaves your device.</p>
+      </header>
 
-  <div class="status" id="status">
-    <div class="status-label" id="statusLabel">Loading AI model…</div>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="status-hint" id="statusHint">First time takes 10–30 seconds. It's cached after that.</div>
-  </div>
+      <div class="dropzone" id="dropzone">
+        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 15V3m0 0L7 8m5-5l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="dropzone-label">Drop an image here, or click to choose</div>
+        <div class="dropzone-hint">JPG, PNG, or WebP · single file</div>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+      </div>
 
-  <div class="error-note" id="errorNote">Something went wrong processing that image. Try a different file, or a smaller one.</div>
+      <div class="status" id="status">
+        <div class="status-label" id="statusLabel">Loading AI model…</div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="status-hint" id="statusHint">First time takes 10–30 seconds. It's cached after that.</div>
+      </div>
 
-  <div class="result" id="result">
-    <div class="result-card">
-      <div class="preview-imgs">
-        <div>
-          <img id="origPreview" src="" alt="Original preview">
-          <div class="preview-cap">original</div>
-        </div>
-        <div>
-          <img id="cutoutPreview" src="" alt="Background removed preview">
-          <div class="preview-cap">background removed</div>
+      <div class="error-note" id="errorNote">Something went wrong processing that image. Try a different file, or a smaller one.</div>
+
+      <div class="result" id="result">
+        <div class="result-card">
+          <div class="preview-imgs">
+            <div>
+              <img id="origPreview" src="" alt="Original preview">
+              <div class="preview-cap">original</div>
+            </div>
+            <div>
+              <img id="cutoutPreview" src="" alt="Background removed preview">
+              <div class="preview-cap">background removed</div>
+            </div>
+          </div>
+          <button class="download-btn" id="downloadBtn">Download transparent PNG</button>
         </div>
       </div>
-      <button class="download-btn" id="downloadBtn">Download transparent PNG</button>
-    </div>
-  </div>
 
-  <div class="privacy-note">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Your file never leaves this browser tab. Processing runs fully on-device.
+      <div class="privacy-note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Your file never leaves this browser tab. Processing runs fully on-device.
+      </div>
+
+      <section class="game-zone" id="gameZone">
+        <div class="game-header">
+          <span class="game-title" id="gameTitle">Quick game</span>
+          <span class="game-score" id="gameScore">0</span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div class="game-hint" id="gameHint"></div>
+      </section>
+    </main>
+
+    <aside class="side-col">
+      <div class="ad-slot ad-slot-side">Ad space — 300×280</div>
+    </aside>
   </div>
 </div>
 
@@ -349,6 +460,249 @@
     a.download = 'background-removed.png';
     a.click();
   });
+</script>
+
+<script>
+(function() {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('gameScore');
+  const hintEl = document.getElementById('gameHint');
+  const titleEl = document.getElementById('gameTitle');
+
+  const pickJump = Math.random() < 0.5;
+
+  if (pickJump) {
+    titleEl.textContent = 'Jump the block';
+    hintEl.textContent = 'Tap, click, or press space to jump';
+    canvas.width = 600;
+    canvas.height = 150;
+    initJump();
+  } else {
+    titleEl.textContent = 'Snake';
+    hintEl.textContent = 'Arrow keys or swipe to steer';
+    canvas.width = 300;
+    canvas.height = 300;
+    canvas.style.maxWidth = '300px';
+    canvas.style.margin = '0 auto';
+    initSnake();
+  }
+
+  function initJump() {
+    const W = 600, H = 150;
+    const groundY = 115;
+    let player = { x: 40, y: groundY, w: 22, h: 22, vy: 0, jumping: false };
+    const gravity = 0.7;
+    const jumpForce = -10;
+    let obstacles = [];
+    let speed = 2.5;
+    let score = 0;
+    let frame = 0;
+    let gameOver = false;
+    let running = true;
+
+    function reset() {
+      player.y = groundY;
+      player.vy = 0;
+      player.jumping = false;
+      obstacles = [];
+      speed = 2.5;
+      score = 0;
+      frame = 0;
+      gameOver = false;
+      running = true;
+      scoreEl.textContent = '0';
+      loop();
+    }
+
+    function jump() {
+      if (gameOver) { reset(); return; }
+      if (!player.jumping) {
+        player.vy = jumpForce;
+        player.jumping = true;
+      }
+    }
+
+    canvas.addEventListener('click', jump);
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') { e.preventDefault(); jump(); }
+    });
+
+    function spawnObstacle() {
+      const h = 16 + Math.random() * 14;
+      obstacles.push({ x: W + 10, y: groundY + 22 - h, w: 14, h: h });
+    }
+
+    function loop() {
+      if (!running) return;
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#DEE2D6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, groundY + 22);
+      ctx.lineTo(W, groundY + 22);
+      ctx.stroke();
+
+      player.vy += gravity;
+      player.y += player.vy;
+      if (player.y > groundY) {
+        player.y = groundY;
+        player.vy = 0;
+        player.jumping = false;
+      }
+
+      ctx.fillStyle = '#1A1D18';
+      ctx.beginPath();
+      ctx.roundRect(player.x, player.y, player.w, player.h, 5);
+      ctx.fill();
+
+      if (frame % Math.max(70 - Math.floor(speed * 6), 34) === 0) {
+        spawnObstacle();
+      }
+
+      ctx.fillStyle = '#1F8A5F';
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        const o = obstacles[i];
+        o.x -= speed;
+        ctx.beginPath();
+        ctx.roundRect(o.x, o.y, o.w, o.h, 3);
+        ctx.fill();
+        if (
+          player.x < o.x + o.w &&
+          player.x + player.w > o.x &&
+          player.y + player.h > o.y
+        ) {
+          gameOver = true;
+        }
+        if (o.x + o.w < 0) {
+          obstacles.splice(i, 1);
+          score++;
+          scoreEl.textContent = score;
+          speed = Math.min(2.5 + score * 0.18, 8);
+        }
+      }
+
+      if (gameOver) {
+        ctx.fillStyle = 'rgba(241,243,238,0.85)';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#1A1D18';
+        ctx.font = '500 16px Space Grotesk, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game over — click or press space to retry', W / 2, H / 2);
+        running = false;
+        return;
+      }
+
+      requestAnimationFrame(loop);
+    }
+    reset();
+  }
+
+  function initSnake() {
+    const size = 15, cols = 20, rows = 20;
+    let snake, dir, nextDir, food, over, running, frame, tickEvery, score;
+
+    function place() {
+      let p;
+      do {
+        p = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
+      } while (snake && snake.some(s => s.x === p.x && s.y === p.y));
+      return p;
+    }
+
+    function reset() {
+      snake = [{ x: 9, y: 9 }, { x: 8, y: 9 }, { x: 7, y: 9 }];
+      dir = { x: 1, y: 0 };
+      nextDir = { x: 1, y: 0 };
+      food = place();
+      over = false;
+      running = true;
+      frame = 0;
+      score = 0;
+      tickEvery = 14;
+      scoreEl.textContent = '0';
+      loop();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && dir.y !== 1) { nextDir = { x: 0, y: -1 }; e.preventDefault(); }
+      else if (e.key === 'ArrowDown' && dir.y !== -1) { nextDir = { x: 0, y: 1 }; e.preventDefault(); }
+      else if (e.key === 'ArrowLeft' && dir.x !== 1) { nextDir = { x: -1, y: 0 }; e.preventDefault(); }
+      else if (e.key === 'ArrowRight' && dir.x !== -1) { nextDir = { x: 1, y: 0 }; e.preventDefault(); }
+    });
+
+    let touchStart = null;
+    canvas.addEventListener('touchstart', (e) => {
+      touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    });
+    canvas.addEventListener('touchend', (e) => {
+      if (!touchStart) return;
+      const dx = e.changedTouches[0].clientX - touchStart.x;
+      const dy = e.changedTouches[0].clientY - touchStart.y;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0 && dir.x !== -1) nextDir = { x: 1, y: 0 };
+        else if (dx < 0 && dir.x !== 1) nextDir = { x: -1, y: 0 };
+      } else {
+        if (dy > 0 && dir.y !== -1) nextDir = { x: 0, y: 1 };
+        else if (dy < 0 && dir.y !== 1) nextDir = { x: 0, y: -1 };
+      }
+    });
+    canvas.addEventListener('click', () => { if (over) reset(); });
+
+    function loop() {
+      if (!running) return;
+      frame++;
+      if (frame % tickEvery === 0) {
+        dir = nextDir;
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+        if (
+          head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows ||
+          snake.some(s => s.x === head.x && s.y === head.y)
+        ) {
+          over = true;
+        } else {
+          snake.unshift(head);
+          if (head.x === food.x && head.y === food.y) {
+            food = place();
+            score++;
+            scoreEl.textContent = score;
+            tickEvery = Math.max(6, 14 - Math.floor(score * 0.6));
+          } else {
+            snake.pop();
+          }
+        }
+      }
+
+      ctx.fillStyle = '#F6F7F2';
+      ctx.fillRect(0, 0, cols * size, rows * size);
+      ctx.fillStyle = '#D85A30';
+      ctx.beginPath();
+      ctx.roundRect(food.x * size + 2, food.y * size + 2, size - 4, size - 4, 3);
+      ctx.fill();
+      ctx.fillStyle = '#1F8A5F';
+      snake.forEach(s => {
+        ctx.beginPath();
+        ctx.roundRect(s.x * size + 1, s.y * size + 1, size - 2, size - 2, 3);
+        ctx.fill();
+      });
+
+      if (over) {
+        ctx.fillStyle = 'rgba(246,247,242,0.9)';
+        ctx.fillRect(0, 0, cols * size, rows * size);
+        ctx.fillStyle = '#1A1D18';
+        ctx.font = '500 14px Space Grotesk, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game over — score ' + score, cols * size / 2, rows * size / 2 - 8);
+        ctx.font = '400 12px Inter, sans-serif';
+        ctx.fillText('click to retry', cols * size / 2, rows * size / 2 + 12);
+      }
+
+      requestAnimationFrame(loop);
+    }
+    reset();
+  }
+})();
 </script>
 </body>
 </html>
